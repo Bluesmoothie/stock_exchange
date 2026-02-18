@@ -1,6 +1,6 @@
 #include "classes/stockExchange.hpp"
 
-stockExchange::stockExchange(void) : _addIndex(false), _showIndices(false), _removeIndex(false) {}
+stockExchange::stockExchange(void) : _indices{}, _selectedIndex(_indices.end()), _addIndex(false), _showIndices(false), _removeIndex(false) {}
 
 void	stockExchange::draw(void) {
 		this->_addIndex = ImGui::Shortcut(ImGuiMod_Ctrl | ImGuiKey_A);
@@ -32,8 +32,13 @@ void	stockExchange::draw(void) {
 			}
 		} ImGui::EndMainMenuBar();
 
-		this->addIndexPopup();
-		this->removeIndexPopup();
+		this->drawPopups();
+}
+
+void		stockExchange::drawPopups(void) {
+	this->addIndexPopup();
+	this->removeIndexPopup();
+	this->showIndicesPopup();
 }
 
 void	stockExchange::addIndexPopup(void) {
@@ -96,7 +101,25 @@ std::string	stockExchange::addIndex(const std::string& p_index) {
 }
 
 void	stockExchange::showIndicesPopup(void) {
+	bool	dummy = true;
 
+	if (this->_showIndices) {
+		ImGui::OpenPopup("Indices list");
+		this->_showIndices = false;
+	}
+
+	if (ImGui::BeginPopupModal("Indices list", &dummy, ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::BeginListBox("##Indices list box");
+		std::vector<std::string>::iterator	it = this->_indices.begin();
+		std::vector<std::string>::iterator	ite = this->_indices.end();
+		for (; it != ite; ++it) {
+			if (ImGui::Selectable((*it).c_str(), it == this->_selectedIndex))
+				this->_selectedIndex = it;
+		}
+		ImGui::EndListBox();
+
+		ImGui::EndPopup();
+	}
 }
 
 void	stockExchange::removeIndexPopup(void) {
@@ -156,6 +179,8 @@ std::string	stockExchange::removeIndex(const std::string& p_index) {
 	if (it == ite)
 		return ("Index not found");
 	
+	if (it == this->_selectedIndex)
+		this->_selectedIndex = this->_indices.end();
 	this->_indices.erase(it);
 	return ("OK");
 }

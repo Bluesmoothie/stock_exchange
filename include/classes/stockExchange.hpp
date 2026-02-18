@@ -15,6 +15,8 @@ class stockExchange {
 		bool	_showIndices;
 		bool	_removeIndex;
 
+		void		drawPopups(void);
+
 		void		addIndexPopup(void);
 		std::string	addIndex(const std::string& p_index);
 		void		showIndicesPopup(void);
