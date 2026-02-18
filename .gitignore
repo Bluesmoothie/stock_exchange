@@ -39,3 +39,7 @@
 
 # debug information files
 *.dwo
+
+stock_exchange
+imgui.ini
+.build
