@@ -1,10 +1,10 @@
 #include "classes/video.hpp"
 
-Video::Video(void) : initialized(false) {}
+Video::Video(std::function<void()> p_draw_func) : _draw_func(p_draw_func), _initialized(false) {}
 
 Video::~Video(void) {
 
-	if (this->initialized)
+	if (this->_initialized)
 		this->deinit();
 }
 
@@ -58,29 +58,29 @@ int	Video::init(void) {
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     float main_scale = ImGui_ImplSDL2_GetContentScaleForDisplay(0);
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE);
-    this->window = SDL_CreateWindow(TTT_WINDOW_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, (int)(TTT_WINDOW_WIDTH * main_scale), (int)(TTT_WINDOW_HEIGH * main_scale), window_flags);
-    if (this->window == nullptr)
+    this->_window = SDL_CreateWindow(TTT_WINDOW_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, (int)(TTT_WINDOW_WIDTH * main_scale), (int)(TTT_WINDOW_HEIGH * main_scale), window_flags);
+    if (this->_window == nullptr)
     {
         printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
         return 1;
     }
 
-    this->gl_context = SDL_GL_CreateContext(this->window);
-    if (this->gl_context == nullptr)
+    this->_gl_context = SDL_GL_CreateContext(this->_window);
+    if (this->_gl_context == nullptr)
     {
         printf("Error: SDL_GL_CreateContext(): %s\n", SDL_GetError());
         return 1;
     }
 
-    SDL_GL_MakeCurrent(this->window, this->gl_context);
+    SDL_GL_MakeCurrent(this->_window, this->_gl_context);
     SDL_GL_SetSwapInterval(1); // Enable vsync
 
 	// Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    this->io = ImGui::GetIO();
-    this->io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    this->io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    this->_io = ImGui::GetIO();
+    this->_io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    this->_io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -92,7 +92,7 @@ int	Video::init(void) {
     style.FontScaleDpi = main_scale;        // Set initial font scale. (in docking branch: using io.ConfigDpiScaleFonts=true automatically overrides this for every window depending on the current monitor)
 
     // Setup Platform/Renderer backends
-    ImGui_ImplSDL2_InitForOpenGL(this->window, this->gl_context);
+    ImGui_ImplSDL2_InitForOpenGL(this->_window, this->_gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Load Fonts
@@ -118,7 +118,7 @@ int	Video::init(void) {
 	// config.MergeMode = true;
     // io.Fonts->AddFontFromFileTTF("fonts/NotoEmoji-Regular.ttf", 26.0f, &config);
 
-	this->viewport = ImGui::GetMainViewport();
+	this->_viewport = ImGui::GetMainViewport();
 
 	return 0;
 }
@@ -128,19 +128,19 @@ void	Video::deinit(void) {
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
 
-    SDL_GL_DeleteContext(this->gl_context);
-    SDL_DestroyWindow(this->window);
+    SDL_GL_DeleteContext(this->_gl_context);
+    SDL_DestroyWindow(this->_window);
     SDL_Quit();
-	this->initialized = false;
+	this->_initialized = false;
 }
 
 void	Video::loop(void) {
-	this->done = false;
+	this->_done = false;
 
-	while (!this->done) {
+	while (!this->_done) {
 		this->treatEvents();
 
-		if (SDL_GetWindowFlags(this->window) & SDL_WINDOW_MINIMIZED) {
+		if (SDL_GetWindowFlags(this->_window) & SDL_WINDOW_MINIMIZED) {
             SDL_Delay(10);
             continue;
         }
@@ -160,28 +160,27 @@ void	Video::treatEvents(void) {
     while (SDL_PollEvent(&event)) {
         ImGui_ImplSDL2_ProcessEvent(&event);
         if (event.type == SDL_QUIT)
-            this->done = true;
-        if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(this->window))
-            this->done = true;
+            this->_done = true;
+        if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(this->_window))
+            this->_done = true;
     }
 }
 
 void	Video::render(void) {
 	ImGui::Render();
-    glViewport(0, 0, (int)this->io.DisplaySize.x, (int)this->io.DisplaySize.y);
+    glViewport(0, 0, (int)this->_io.DisplaySize.x, (int)this->_io.DisplaySize.y);
     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    SDL_GL_SwapWindow(this->window);
+    SDL_GL_SwapWindow(this->_window);
 }
 
 void	Video::draw(void) {
 
-	ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_FirstUseEver);
-	ImGui::SetNextWindowSize(viewport->WorkSize, ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos(this->_viewport->WorkPos, ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(this->_viewport->WorkSize, ImGuiCond_FirstUseEver);
 
-	if (ImGui::Begin("main", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar)) {
-		
-	}
+	if (ImGui::Begin("main", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar))
+		this->_draw_func();
 	ImGui::End();
 }

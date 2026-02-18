@@ -11,6 +11,7 @@
 # include <SDL2/SDL_opengl.h>
 #endif
 #include <string>
+#include <functional>
 
 #define TTT_WINDOW_TITLE	"Stock exchange"
 #define TTT_WINDOW_WIDTH	1720
@@ -28,17 +29,19 @@ class	Video {
 
 private:
 
-	SDL_Window* 	window;
-	ImGuiIO 		io;
-	SDL_GLContext 	gl_context;
-	ImGuiViewport*	viewport;
+	std::function<void()>	_draw_func;
 
-	bool			initialized;
-	bool			done;
+	SDL_Window* 	_window;
+	ImGuiIO 		_io;
+	SDL_GLContext 	_gl_context;
+	ImGuiViewport*	_viewport;
+
+	bool			_initialized;
+	bool			_done;
 
 public:
 
-	Video(void);
+	Video(std::function<void()> p_draw_func);
 	~Video(void);
 
 	int		init(void);

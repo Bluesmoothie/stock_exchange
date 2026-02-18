@@ -2,7 +2,8 @@
 
 int main(int, char**)
 {
-	Video	video;
+	stockExchange	StockExchange;
+	Video			video([&StockExchange](){StockExchange.draw();});
 
     if (video.init()) {
 		return 1;

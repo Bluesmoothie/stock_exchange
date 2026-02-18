@@ -30,6 +30,7 @@ SRC_FILES			=	main								\
     					imgui/backends/imgui_impl_sdl2 		\
     					imgui/backends/imgui_impl_opengl3 	\
 						classes/video						\
+						classes/stockExchange				\
 
 SRC 				= 	$(addprefix $(SRC_DIR), $(addsuffix .cpp, $(SRC_FILES)))
 OBJ 				= 	$(addprefix $(BUILD_DIR), $(addsuffix .o, $(SRC_FILES)))
@@ -44,9 +45,9 @@ $(NAME)				:	$(BUILD_DIR) $(OBJ)
 
 $(BUILD_DIR)		:
 					mkdir -p $(BUILD_DIR)
-					mkdir -p $(BUILD_DIR)/imgui
-					mkdir -p $(BUILD_DIR)/imgui/backends
-					mkdir -p $(BUILD_DIR)/classes
+					mkdir -p $(BUILD_DIR)imgui
+					mkdir -p $(BUILD_DIR)imgui/backends
+					mkdir -p $(BUILD_DIR)classes
 
 $(BUILD_DIR)%.o		: 	$(SRC_DIR)%.cpp
 					$(CXX) $(CXXFLAGS) -c $< -o $@
