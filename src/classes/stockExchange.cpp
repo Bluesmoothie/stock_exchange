@@ -33,6 +33,7 @@ void	stockExchange::draw(void) {
 		} ImGui::EndMainMenuBar();
 
 		this->addIndexPopup();
+		this->removeIndexPopup();
 }
 
 void	stockExchange::addIndexPopup(void) {
@@ -51,7 +52,7 @@ void	stockExchange::addIndexPopup(void) {
 		if (ImGui::IsWindowAppearing())
 			ImGui::SetKeyboardFocusHere(0);
 		ImGui::SameLine();
-		ImGui::InputText("##indexInput", &buff);
+		ImGui::InputText("##addIndexInput", &buff);
 
 		ImGui::Spacing();
 
@@ -82,7 +83,7 @@ void	stockExchange::addIndexPopup(void) {
 	}
 }
 
-std::string	stockExchange::addIndex(std::string p_index) {
+std::string	stockExchange::addIndex(const std::string& p_index) {
 	if (p_index.size() == 0)
 		return "Empty text";
 
@@ -99,5 +100,62 @@ void	stockExchange::showIndicesPopup(void) {
 }
 
 void	stockExchange::removeIndexPopup(void) {
+	static std::string	message = {};
+	static std::string	buff = {};
 
+	if (this->_removeIndex) {
+		ImGui::OpenPopup("Remove index");
+		this->_removeIndex = false;
+		message.clear();
+		buff.clear();
+	}
+	
+	if (ImGui::BeginPopupModal("Remove index", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::Text("Index:");
+		if (ImGui::IsWindowAppearing())
+			ImGui::SetKeyboardFocusHere(0);
+		ImGui::SameLine();
+		ImGui::InputText("##removeIndexInput", &buff);
+
+		ImGui::Spacing();
+
+		ImGui::SetCursorPosX(20.0f);
+		if (ImGui::Button("Remove", ImVec2(100.0f, 0)) || ImGui::IsKeyPressed(ImGuiKey_Enter)) {
+			message = this->removeIndex(buff);
+			if (message == "OK") {
+				message.clear();
+				ImGui::CloseCurrentPopup();
+			}
+		}
+		ImGui::SameLine(ImGui::GetWindowWidth() - 100.0f - 20.0f);
+		if (ImGui::Button("Cancel", ImVec2(100.0f, 0)))
+			ImGui::CloseCurrentPopup();
+
+		if (!message.empty()) {
+			ImVec2	text_size = ImGui::CalcTextSize(message.c_str());
+
+			ImGui::PushStyleColor(ImGuiCol_Text, color_red);
+			ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - text_size.x) * 0.5f);
+			ImGui::Text("%s", message.c_str());
+			ImGui::PopStyleColor(1);
+
+		} else
+			ImGui::Text("");
+
+		ImGui::EndPopup();
+	}
+
+}
+
+std::string	stockExchange::removeIndex(const std::string& p_index) {
+	if (p_index.size() == 0)
+		return "Empty text";
+
+	std::vector<std::string>::iterator	ite = this->_indices.end();
+	std::vector<std::string>::iterator	it = std::find(this->_indices.begin(), ite, p_index);
+	if (it == ite)
+		return ("Index not found");
+	
+	this->_indices.erase(it);
+	return ("OK");
 }

@@ -16,9 +16,10 @@ class stockExchange {
 		bool	_removeIndex;
 
 		void		addIndexPopup(void);
-		std::string	addIndex(std::string p_index);
+		std::string	addIndex(const std::string& p_index);
 		void		showIndicesPopup(void);
 		void		removeIndexPopup(void);
+		std::string	removeIndex(const std::string& p_index);
 
 	public:
 
