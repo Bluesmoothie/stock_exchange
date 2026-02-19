@@ -7,7 +7,7 @@ MODE 				?= 	release
 
 CXX					=	c++
 CXXFLAGS			=	-Wall -Wextra -Werror -MMD -MP $(INCLUDE)
-LIBS				=	-lSDL2 -lGL
+LIBS				=	-lSDL2 -lGL -lcurl -ljsoncpp
 
 ifeq ($(MODE), debug)
 	CXXFLAGS		= 	-Wall -Wextra -MMD -MP $(INCLUDE) -g3 -DDEBUG
@@ -29,6 +29,8 @@ SRC_FILES			=	main								\
     					imgui/imgui_widgets 				\
     					imgui/backends/imgui_impl_sdl2 		\
     					imgui/backends/imgui_impl_opengl3 	\
+						finnhub-api-cpp/FinnHubAPI			\
+						finnhub-api-cpp/RealTimeDataSource	\
 						classes/video						\
 						classes/stockExchange				\
 
@@ -47,6 +49,7 @@ $(BUILD_DIR)		:
 					mkdir -p $(BUILD_DIR)
 					mkdir -p $(BUILD_DIR)imgui
 					mkdir -p $(BUILD_DIR)imgui/backends
+					mkdir -p $(BUILD_DIR)finnhub-api-cpp
 					mkdir -p $(BUILD_DIR)classes
 
 $(BUILD_DIR)%.o		: 	$(SRC_DIR)%.cpp
