@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
-#include <json/json.h>
+#include <jsoncpp/json/json.h>
 #include <curl/curl.h>
 namespace Rivendell
 {
