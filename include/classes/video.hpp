@@ -20,12 +20,6 @@
 
 const ImVec4	clear_color = ImVec4(0.67f, 0.83f, 0.02f, 1.00f);
 
-const ImVec4 	color_red = ImVec4(0.9f, 0.2f, 0.2f, 1.0f);
-const ImVec4 	color_blue = ImVec4(0.2f, 0.6f, 0.9f, 1.0f);
-const ImVec4 	color_white = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-const ImVec4 	color_light_grey = ImVec4(0.85f, 0.85f, 0.90f, 1.00f);
-const ImVec4	color_medium_grey = ImVec4(0.65f, 0.65f, 0.70f, 1.00f);
-
 class	Video {
 
 private:

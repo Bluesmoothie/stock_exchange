@@ -18,7 +18,7 @@ void	stockExchange::draw(void) {
 
 		if (ImGui::BeginMenu("Select index")) {
 			if (this->_indices.empty()) {
-				ImGui::PushStyleColor(ImGuiCol_Text, color_medium_grey);
+				ImGui::PushStyleColor(ImGuiCol_Text, UI_COLOR_MEDIUM_GREY);
 				ImGui::MenuItem("Empty...", nullptr, false, false);
 				ImGui::PopStyleColor(1);
 			} else {
@@ -73,7 +73,7 @@ void	stockExchange::apiKeyPopup(void) {
 		if (!message.empty()) {
 			ImVec2	text_size = ImGui::CalcTextSize(message.c_str());
 
-			ImGui::PushStyleColor(ImGuiCol_Text, color_red);
+			ImGui::PushStyleColor(ImGuiCol_Text, UI_COLOR_RED);
 			ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - text_size.x) * 0.5f);
 			ImGui::Text("%s", message.c_str());
 			ImGui::PopStyleColor(1);
@@ -138,7 +138,7 @@ void	stockExchange::addIndexPopup(void) {
 		if (!message.empty()) {
 			ImVec2	text_size = ImGui::CalcTextSize(message.c_str());
 
-			ImGui::PushStyleColor(ImGuiCol_Text, color_red);
+			ImGui::PushStyleColor(ImGuiCol_Text, UI_COLOR_RED);
 			ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - text_size.x) * 0.5f);
 			ImGui::Text("%s", message.c_str());
 			ImGui::PopStyleColor(1);
@@ -227,7 +227,7 @@ void	stockExchange::removeIndexPopup(void) {
 		if (!message.empty()) {
 			ImVec2	text_size = ImGui::CalcTextSize(message.c_str());
 
-			ImGui::PushStyleColor(ImGuiCol_Text, color_red);
+			ImGui::PushStyleColor(ImGuiCol_Text, UI_COLOR_RED);
 			ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - text_size.x) * 0.5f);
 			ImGui::Text("%s", message.c_str());
 			ImGui::PopStyleColor(1);
