@@ -9,7 +9,7 @@
 class stockExchange {
 	private:
 
-		Rivendell::FinnHubAPI*				api;
+		Rivendell::FinnHubAPI*				_api;
 
 		std::vector<std::string>			_indices;
 		std::vector<std::string>::iterator	_selectedIndex;
@@ -22,6 +22,7 @@ class stockExchange {
 		void		drawPopups(void);
 
 		void		apiKeyPopup(void);
+		std::string	apiKey(const std::string& p_apiKey);
 		void		addIndexPopup(void);
 		std::string	addIndex(const std::string& p_index);
 		void		showIndicesPopup(void);

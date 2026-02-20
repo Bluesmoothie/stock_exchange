@@ -1,9 +1,9 @@
 #include "classes/stockExchange.hpp"
 
-stockExchange::stockExchange(void) : api(nullptr), _indices{}, _selectedIndex(_indices.end()), _apiKey(false), _addIndex(false), _showIndices(false), _removeIndex(false) {}
+stockExchange::stockExchange(void) : _api(nullptr), _indices{}, _selectedIndex(_indices.end()), _apiKey(false), _addIndex(false), _showIndices(false), _removeIndex(false) {}
 
 void	stockExchange::draw(void) {
-	this->_apiKey = this->api == nullptr;
+	this->_apiKey = this->_api == nullptr;
 	this->_addIndex = ImGui::Shortcut(ImGuiMod_Ctrl | ImGuiKey_A);
 	this->_showIndices = ImGui::Shortcut(ImGuiMod_Ctrl | ImGuiKey_S);
 	this->_removeIndex = ImGui::Shortcut(ImGuiMod_Ctrl | ImGuiKey_R);
@@ -44,15 +44,58 @@ void		stockExchange::drawPopups(void) {
 }
 
 void	stockExchange::apiKeyPopup(void) {
+	static std::string	buff = {};
+	static std::string	message = {};
+
 	if (this->_apiKey) {
 		ImGui::OpenPopup("Api key");
 		this->_apiKey = false;
 	}
 
 	if (ImGui::BeginPopupModal("Api key", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::Text("Finnhub API key:");
+		if (ImGui::IsWindowAppearing())
+			ImGui::SetKeyboardFocusHere(0);
+		ImGui::SameLine();
+		ImGui::InputText("##apiKeyInput", &buff);
+
+		ImGui::Spacing();
+
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 100.0f) / 2);
+		if (ImGui::Button("Add", ImVec2(100.0f, 0)) || ImGui::IsKeyPressed(ImGuiKey_Enter)) {
+			message = this->apiKey(buff);
+			if (message == "OK") {
+				message.clear();
+				ImGui::CloseCurrentPopup();
+			}
+		}
+
+		if (!message.empty()) {
+			ImVec2	text_size = ImGui::CalcTextSize(message.c_str());
+
+			ImGui::PushStyleColor(ImGuiCol_Text, color_red);
+			ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - text_size.x) * 0.5f);
+			ImGui::Text("%s", message.c_str());
+			ImGui::PopStyleColor(1);
+
+		} else
+			ImGui::Text(" ");
 
 		ImGui::EndPopup();
 	}
+}
+
+std::string	stockExchange::apiKey(const std::string& p_apiKey) {
+	this->_api = new Rivendell::FinnHubAPI(p_apiKey);
+
+	Json::Value*	res = this->_api->StockSymbolLookup("apple");
+
+	if (res && res->isMember("error") && (*res)["error"].isString())
+		return (*res)["error"].asString();
+	else if (!res || (res && res->isMember("error") && !(*res)["error"].isString()))
+		return "Internal unknow error";
+	else
+		return "OK";
 }
 
 void	stockExchange::addIndexPopup(void) {
