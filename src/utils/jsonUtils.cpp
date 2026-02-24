@@ -3,7 +3,7 @@
 namespace	jsonUtils {
 
 	bool	isErrorResponse(const Json::Value* p_res) {
-		if (!p_res)
+		if (!p_res || !(*p_res))
 			return true;
 
 		return p_res->isMember("error");
