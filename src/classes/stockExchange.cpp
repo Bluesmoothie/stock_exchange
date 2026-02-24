@@ -44,45 +44,16 @@ void		stockExchange::drawPopups(void) {
 }
 
 void	stockExchange::apiKeyPopup(void) {
+	const char			popupName[] = "Api key";
 	static std::string	buff = {};
 	static std::string	message = {};
 
 	if (this->_apiKey) {
-		ImGui::OpenPopup("Api key");
+		ImGui::OpenPopup(popupName);
 		this->_apiKey = false;
 	}
 
-	if (ImGui::BeginPopupModal("Api key", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-		ImGui::Text("Finnhub API key:");
-		if (ImGui::IsWindowAppearing())
-			ImGui::SetKeyboardFocusHere(0);
-		ImGui::SameLine();
-		ImGui::InputText("##apiKeyInput", &buff);
-
-		ImGui::Spacing();
-
-		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 100.0f) / 2);
-		if (ImGui::Button("Add", ImVec2(100.0f, 0)) || ImGui::IsKeyPressed(ImGuiKey_Enter)) {
-			message = this->registerApiKey(buff);
-			if (message == "OK") {
-				message.clear();
-				ImGui::CloseCurrentPopup();
-			}
-		}
-
-		if (!message.empty()) {
-			ImVec2	text_size = ImGui::CalcTextSize(message.c_str());
-
-			ImGui::PushStyleColor(ImGuiCol_Text, UI_COLOR_RED);
-			ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - text_size.x) * 0.5f);
-			ImGui::Text("%s", message.c_str());
-			ImGui::PopStyleColor(1);
-
-		} else
-			ImGui::Text(" ");
-
-		ImGui::EndPopup();
-	}
+	obligatoryInputPopup(buff, message, popupName, "Finnhub API key", [this](const std::string& p) -> std::string {return this->registerApiKey(p);});
 }
 
 std::string	stockExchange::registerApiKey(const std::string& p_apiKey) {
@@ -104,50 +75,18 @@ std::string	stockExchange::registerApiKey(const std::string& p_apiKey) {
 }
 
 void	stockExchange::addIndexPopup(void) {
+	const char			popupName[] = "Add index";
 	static std::string	message = {};
 	static std::string	buff = {};
 
 	if (this->_addIndex) {
-		ImGui::OpenPopup("Add index");
+		ImGui::OpenPopup(popupName);
 		this->_addIndex = false;
 		message.clear();
 		buff.clear();
 	}
 	
-	if (ImGui::BeginPopupModal("Add index", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-		ImGui::Text("Index:");
-		if (ImGui::IsWindowAppearing())
-			ImGui::SetKeyboardFocusHere(0);
-		ImGui::SameLine();
-		ImGui::InputText("##addIndexInput", &buff);
-
-		ImGui::Spacing();
-
-		ImGui::SetCursorPosX(20.0f);
-		if (ImGui::Button("Add", ImVec2(100.0f, 0)) || ImGui::IsKeyPressed(ImGuiKey_Enter)) {
-			message = this->addIndex(buff);
-			if (message == "OK") {
-				message.clear();
-				ImGui::CloseCurrentPopup();
-			}
-		}
-		ImGui::SameLine(ImGui::GetWindowWidth() - 100.0f - 20.0f);
-		if (ImGui::Button("Cancel", ImVec2(100.0f, 0)))
-			ImGui::CloseCurrentPopup();
-
-		if (!message.empty()) {
-			ImVec2	text_size = ImGui::CalcTextSize(message.c_str());
-
-			ImGui::PushStyleColor(ImGuiCol_Text, UI_COLOR_RED);
-			ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - text_size.x) * 0.5f);
-			ImGui::Text("%s", message.c_str());
-			ImGui::PopStyleColor(1);
-
-		} else
-			ImGui::Text(" ");
-
-		ImGui::EndPopup();
-	}
+	inputPopup(buff, message, popupName, "Index", [this](const std::string& p) -> std::string {return this->addIndex(p);});
 }
 
 std::string	stockExchange::addIndex(const std::string& p_index) {
@@ -193,51 +132,18 @@ void	stockExchange::showIndicesPopup(void) {
 }
 
 void	stockExchange::removeIndexPopup(void) {
+	const char			popupName[] = "Remove index";
 	static std::string	message = {};
 	static std::string	buff = {};
 
 	if (this->_removeIndex) {
-		ImGui::OpenPopup("Remove index");
+		ImGui::OpenPopup(popupName);
 		this->_removeIndex = false;
 		message.clear();
 		buff.clear();
 	}
 	
-	if (ImGui::BeginPopupModal("Remove index", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-		ImGui::Text("Index:");
-		if (ImGui::IsWindowAppearing())
-			ImGui::SetKeyboardFocusHere(0);
-		ImGui::SameLine();
-		ImGui::InputText("##removeIndexInput", &buff);
-
-		ImGui::Spacing();
-
-		ImGui::SetCursorPosX(20.0f);
-		if (ImGui::Button("Remove", ImVec2(100.0f, 0)) || ImGui::IsKeyPressed(ImGuiKey_Enter)) {
-			message = this->removeIndex(buff);
-			if (message == "OK") {
-				message.clear();
-				ImGui::CloseCurrentPopup();
-			}
-		}
-		ImGui::SameLine(ImGui::GetWindowWidth() - 100.0f - 20.0f);
-		if (ImGui::Button("Cancel", ImVec2(100.0f, 0)))
-			ImGui::CloseCurrentPopup();
-
-		if (!message.empty()) {
-			ImVec2	text_size = ImGui::CalcTextSize(message.c_str());
-
-			ImGui::PushStyleColor(ImGuiCol_Text, UI_COLOR_RED);
-			ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - text_size.x) * 0.5f);
-			ImGui::Text("%s", message.c_str());
-			ImGui::PopStyleColor(1);
-
-		} else
-			ImGui::Text(" ");
-
-		ImGui::EndPopup();
-	}
-
+	inputPopup(buff, message, popupName, "Index", [this](const std::string& p) -> std::string {return this->removeIndex(p);});
 }
 
 std::string	stockExchange::removeIndex(const std::string& p_index) {

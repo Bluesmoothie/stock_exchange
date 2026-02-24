@@ -7,6 +7,7 @@
 #include "finnhub-api-cpp/FinnHubAPI.h"
 #include "utils/jsonUtils.hpp"
 #include "ui.hpp"
+#include "utils/guiUtils.hpp"
 
 class stockExchange {
 	private:

@@ -12,3 +12,9 @@
 # include <SDL2/SDL_opengl.h>
 #endif
 
+#include <functional>
+#include "ui.hpp"
+
+
+void	obligatoryInputPopup(std::string& buff, std::string& message, const char popupName[], const std::string& inputName, std::function<std::string(const std::string&)> callbackFunc);
+void	inputPopup(std::string& buff, std::string& message, const char popupName[], const std::string& inputName, std::function<std::string(const std::string&)> callbackFunc);

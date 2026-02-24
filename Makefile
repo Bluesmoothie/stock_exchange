@@ -32,6 +32,7 @@ SRC_FILES			=	main								\
 						finnhub-api-cpp/FinnHubAPI			\
 						finnhub-api-cpp/RealTimeDataSource	\
 						utils/jsonUtils						\
+						utils/guiUtils						\
 						classes/video						\
 						classes/stockExchange				\
 
