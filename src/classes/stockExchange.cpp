@@ -53,7 +53,7 @@ void	stockExchange::apiKeyPopup(void) {
 		this->_apiKey = false;
 	}
 
-	obligatoryInputPopup(buff, message, popupName, "Finnhub API key", [this](const std::string& p) -> std::string {return this->registerApiKey(p);});
+	guiUtils::obligatoryInputPopup(buff, message, popupName, "Finnhub API key", [this](const std::string& p) -> std::string {return this->registerApiKey(p);});
 }
 
 std::string	stockExchange::registerApiKey(const std::string& p_apiKey) {
@@ -86,7 +86,7 @@ void	stockExchange::addIndexPopup(void) {
 		buff.clear();
 	}
 	
-	inputPopup(buff, message, popupName, "Index", [this](const std::string& p) -> std::string {return this->addIndex(p);});
+	guiUtils::inputPopup(buff, message, popupName, "Index", [this](const std::string& p) -> std::string {return this->addIndex(p);});
 }
 
 std::string	stockExchange::addIndex(const std::string& p_index) {
@@ -143,7 +143,7 @@ void	stockExchange::removeIndexPopup(void) {
 		buff.clear();
 	}
 	
-	inputPopup(buff, message, popupName, "Index", [this](const std::string& p) -> std::string {return this->removeIndex(p);});
+	guiUtils::inputPopup(buff, message, popupName, "Index", [this](const std::string& p) -> std::string {return this->removeIndex(p);});
 }
 
 std::string	stockExchange::removeIndex(const std::string& p_index) {
