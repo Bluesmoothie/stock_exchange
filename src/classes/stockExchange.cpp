@@ -77,6 +77,7 @@ void		stockExchange::drawMainScreen(void) {
 void		stockExchange::drawPopups(void) {
 	this->apiKeyPopup();
 	this->addIndexPopup();
+	this->selectIndexPopup();
 	this->removeIndexPopup();
 	this->showIndicesPopup();
 }
@@ -131,7 +132,7 @@ std::string	stockExchange::addIndex(const std::string& p_index) {
 	if (p_index.size() == 0)
 		return "Empty text";
 
-	Json::Value*	res = this->_api->StockQuote(p_index);
+	Json::Value*	res = this->_api->StockSymbolLookup(p_index);
 
 	if (jsonUtils::isErrorResponse(res)) {
 		std::string	ret = jsonUtils::getResponseError(res);
@@ -139,12 +140,29 @@ std::string	stockExchange::addIndex(const std::string& p_index) {
 		return ret;
 	}
 
-	std::vector<std::string>::iterator	ite = this->_indices.end();
-	if (std::find(this->_indices.begin(), ite, p_index) != ite)
-		return "Index aleady added";
+	if (res->isMember("count") && (*res)["count"].asInt() > 0) {
+		this->_selectedIndex = true;
+		return "Selecting";
+	}
+
+	// std::vector<std::string>::iterator	ite = this->_indices.end();
+	// if (std::find(this->_indices.begin(), ite, p_index) != ite)
+	// 	return "Index aleady added";
 	
-	this->_indices.push_back(p_index);
-	return "OK";
+	// this->_indices.push_back(p_index);
+	return "Unknow error";
+}
+
+void		stockExchange::selectIndexPopup(void) {
+	const char			popupName[] = "Select index";
+	static	std::vector<std::string>::difference_type	selectedIndex = 0;
+
+	if (this->_selectIndex) {
+		ImGui::OpenPopup(popupName);
+		this->_selectIndex = false;
+		selectedIndex = 0;
+	}
+
 }
 
 void	stockExchange::showIndicesPopup(void) {

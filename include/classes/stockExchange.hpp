@@ -19,6 +19,7 @@ class stockExchange {
 
 		bool	_apiKey;
 		bool	_addIndex;
+		bool	_selectIndex;
 		bool	_showIndices;
 		bool	_removeIndex;
 
@@ -30,6 +31,7 @@ class stockExchange {
 		std::string	registerApiKey(const std::string& p_apiKey);
 		void		addIndexPopup(void);
 		std::string	addIndex(const std::string& p_index);
+		void		selectIndexPopup(void);
 		void		showIndicesPopup(void);
 		void		removeIndexPopup(void);
 		std::string	removeIndex(const std::string& p_index);

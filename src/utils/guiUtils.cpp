@@ -78,7 +78,7 @@ namespace	guiUtils {
 		}
 	}
 
-	void	selectableListPopup(const char popupName[], std::vector<std::string>& list, std::vector<std::string>::difference_type& selectedIndex, std::function<void(const std::vector<std::string>::difference_type)> setFunc) {
+	void	selectableListPopup(const char popupName[], std::vector<std::string>& list, std::vector<std::string>::difference_type& selectedIndex, std::function<void(const std::vector<std::string>::difference_type)> setFunc, bool closeOnOk) {
 		const std::string	boxName = std::string("##") + popupName + "Box";
 		
 		if (ImGui::BeginPopupModal(popupName, nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
@@ -92,11 +92,16 @@ namespace	guiUtils {
 			}
 			ImGui::EndListBox();
 
-			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - UI_BUTTON_WIDTH) / 2);
-			if (ImGui::Button("Ok", UI_BUTTON_SIZE)) {
+			ImGui::SetCursorPosX(UI_PADDING_WIDTH);
+			if (ImGui::Button("Ok", UI_BUTTON_SIZE) || ImGui::IsKeyPressed(ImGuiKey_Enter)) {
 				setFunc(selectedIndex);
-				ImGui::CloseCurrentPopup();
+				if (closeOnOk)
+					ImGui::CloseCurrentPopup();
 			}
+
+			ImGui::SameLine(ImGui::GetWindowWidth() - UI_BUTTON_WIDTH - UI_PADDING_WIDTH);
+			if (ImGui::Button("Cancel", UI_BUTTON_SIZE))
+				ImGui::CloseCurrentPopup();
 	
 			ImGui::EndPopup();
 		}
