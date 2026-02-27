@@ -4,6 +4,7 @@ stockExchange::stockExchange(void) {}
 
 void	stockExchange::draw(void) {
 	
+	this->_oldSelectedIndex = this->_selectedIndex;
 	this->drawMenuBar();
 	this->drawMainScreen();
 	this->drawPopups();
@@ -48,6 +49,11 @@ void		stockExchange::drawMainScreen(void) {
 
 	static std::string	error = {};
 	static Json::Value*	quotes = nullptr;
+
+	if (quotes && this->_oldSelectedIndex != this->_selectedIndex) {
+		delete quotes;
+		quotes = nullptr;
+	}
 
 	if (!quotes) {
 		quotes = this->_api->StockQuote(this->_indices[this->_selectedIndex]);
@@ -115,7 +121,7 @@ std::string	stockExchange::registerApiKey(const std::string& p_apiKey) {
 }
 
 void	stockExchange::searchIndexPopup(void) {
-	const char			popupName[] = "Add index";
+	const char			popupName[] = "Search index";
 	static std::string	message = {};
 	static std::string	buff = {};
 

@@ -17,11 +17,13 @@ class stockExchange {
 
 		std::vector<std::string>					_indices{};
 		std::vector<std::string>::difference_type	_selectedIndex = -1;
+		std::vector<std::string>::difference_type	_oldSelectedIndex = -1;
 
 		Json::Value*								_lastResults = nullptr;
 		std::vector<std::string>*					_lastIndices = nullptr;
 
 		float	_menuHeight = 0.0f;
+
 
 		bool	_popupApiKey = false;
 		bool	_popupSearchIndex = false;
