@@ -21,6 +21,8 @@ class stockExchange {
 		Json::Value*								_lastResults = nullptr;
 		std::vector<std::string>*					_lastIndices = nullptr;
 
+		float	_menuHeight = 0.0f;
+
 		bool	_popupApiKey = false;
 		bool	_popupSearchIndex = false;
 		bool	_popupSelectIndex = false;

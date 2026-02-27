@@ -38,6 +38,7 @@ void		stockExchange::drawMenuBar(void) {
 				}
 			}
 			ImGui::EndMenu();
+			this->_menuHeight = ImGui::GetWindowHeight();
 		}
 	} ImGui::EndMainMenuBar();
 }
@@ -56,7 +57,7 @@ void		stockExchange::drawMainScreen(void) {
 		}
 	}
 
-	ImGui::Dummy(ImVec2(0, 15));
+	ImGui::Dummy(ImVec2(0, this->_menuHeight));
 	if (error.size() > 0) {
 		ImGui::Text("Error while fetching stock quote: %s", error.c_str());
 	} else {
