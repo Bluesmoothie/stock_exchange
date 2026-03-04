@@ -5,16 +5,15 @@
 #include <algorithm>
 #include <ctime>
 
+#include "save.hpp"
 #include "video.hpp"
 #include "ui.hpp"
 #include "utils/jsonUtils.hpp"
 #include "utils/guiUtils.hpp"
 #include "finnhub-api-cpp/FinnHubAPI.h"
 
-class stockExchange {
+class stockExchange : public save {
 	private:
-
-		Rivendell::FinnHubAPI*						_api = nullptr;
 
 		std::vector<std::string>					_indices{};
 		std::vector<std::string>::difference_type	_selectedIndex = -1;
